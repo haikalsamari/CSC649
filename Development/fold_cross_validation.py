@@ -1,3 +1,5 @@
+import pandas as pd
+
 def fold_cross_validation (data_input, data_target) :
     num_folds = 5
     test_range = int(len(data_input) / num_folds)
