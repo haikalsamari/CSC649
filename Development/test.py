@@ -91,7 +91,7 @@ else:
 
 # ALGORITHM SELECTION -------------------------------------------------------------------------------------------------------------------------
     
-selection_algorithm = 'SVM'
+selection_algorithm = 'Random Forest'
 
 if selection_algorithm == 'Random Forest' :
 
