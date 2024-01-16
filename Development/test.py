@@ -3,9 +3,11 @@ import pandas as pd
 import numpy as np
 from fold_cross_validation import fold_cross_validation
 from random_forest_apply import random_forest
+from k_near_neighbor_apply import k_near_neighbor
+from support_vector_machine_apply import support_vector_machine
 
 # DATASET SELECTION -------------------------------------------------------------------------------------------------------------------------
-selection_dataset = 'Absenteeism'
+selection_dataset = 'Turnover'
 
 if selection_dataset == 'Absenteeism':
     # Data Reading
@@ -48,17 +50,37 @@ else:
 
 # ALGORITHM SELECTION -------------------------------------------------------------------------------------------------------------------------
     
-selection_algorithm = 'Random Forest'
+selection_algorithm = 'SVM'
 
 if selection_algorithm == 'Random Forest' :
 
     if np.any(user_input_array):
-        test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
+        test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
         print("test result : ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
+        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
         print("test_result : ", test_result, "(", test_result_type, ")")
     
+elif selection_algorithm == 'KNN' :
+
+    if np.any(user_input_array):
+        test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 500, user_input_array)
+        print("test result : ", test_result, "(", test_result_type, ")")
+        print("user_pred : ", user_pred)
+    else:
+        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 500, user_input_array)
+        print("test_result : ", test_result, "(", test_result_type, ")")
+
+elif selection_algorithm == 'SVM' :
+
+    if np.any(user_input_array):
+        test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
+        print("test result : ", test_result, "(", test_result_type, ")")
+        print("user_pred : ", user_pred)
+    else:
+        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
+        print("test_result : ", test_result, "(", test_result_type, ")")
+
 else :
     print('None')

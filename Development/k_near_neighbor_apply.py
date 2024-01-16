@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
 
-def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, user_input_array):
+def k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, user_input_array):
     
     n = n_estimator
     
@@ -13,7 +13,7 @@ def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, 
     if reg_or_class == 'Regression' :
         
         # Develop the model
-        rf = KNeighborsRegressor(n_estimators=n)
+        rf = KNeighborsRegressor(n_neighbors=n)
         
         # Train model
         rf.fit(x_train, y_train)
@@ -29,7 +29,7 @@ def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, 
     elif reg_or_class == 'Classification' :
         
         # Develop the model
-        rf = KNeighborsClassifier(n_estimators=n)
+        rf = KNeighborsClassifier(n_neighbors=n)
         
         # Train model
         rf.fit(x_train, y_train)

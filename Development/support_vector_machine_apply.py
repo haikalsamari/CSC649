@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
 
-def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, user_input_array):
+def support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, user_input_array):
     
     n = n_estimator
     
