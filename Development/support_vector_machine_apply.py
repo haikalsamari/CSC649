@@ -29,7 +29,7 @@ def support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, n_es
     elif reg_or_class == 'Classification' :
         
         # Develop the model
-        svm = SVR(kernel=n)
+        svm = SVC(kernel=n)
         
         # Train model
         svm.fit(x_train, y_train)

@@ -42,8 +42,6 @@ elif selection_dataset == 'Turnover':
     reg_or_class = 'Classification'
     user_input_array = np.array([])
     
-    data
-    
 else:
     print("None")
 
@@ -79,7 +77,7 @@ elif selection_algorithm == 'SVM' :
         print("test result : ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
+        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'sigmoid', user_input_array)
         print("test_result : ", test_result, "(", test_result_type, ")")
 
 else :
