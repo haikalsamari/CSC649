@@ -1,6 +1,6 @@
 # Method Definition : Random Forest Model Training
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
@@ -13,7 +13,7 @@ def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, 
     if reg_or_class == 'Regression' :
         
         # Develop the model
-        rf = RandomForestRegressor(n_estimators=n)
+        rf = KNeighborsRegressor(n_estimators=n)
         
         # Train model
         rf.fit(x_train, y_train)
@@ -29,7 +29,7 @@ def random_forest (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, 
     elif reg_or_class == 'Classification' :
         
         # Develop the model
-        rf = RandomForestClassifier(n_estimators=n)
+        rf = KNeighborsClassifier(n_estimators=n)
         
         # Train model
         rf.fit(x_train, y_train)
