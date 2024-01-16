@@ -58,7 +58,6 @@ elif selection_dataset == 'Burnout':
     data_train = pd.get_dummies(data_train, columns=categorical_columns)
     data_test = pd.get_dummies(data_test, columns=categorical_columns)
 
-    #df = df.drop(index=range(2000, len(df)))
     # Drop row-2001 until the end, Learning process to slow
     data_train = data_train.drop(index=range(2000, len(data_train)))
     data_test = data_test.drop(index=range(2000, len(data_test)))
