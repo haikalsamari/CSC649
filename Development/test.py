@@ -20,8 +20,8 @@ if selection_dataset == 'Absenteeism':
     reg_or_class = 'Regression'
     
     # streamlit
-    user_input_array = np.array([[11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30], [11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30]])
-    #user_input_array = np.array([])
+    #user_input_array = np.array([[11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30], [11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30]])
+    user_input_array = np.array([])
     
 elif selection_dataset == 'Turnover':
      # Data Reading

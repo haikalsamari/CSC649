@@ -21,7 +21,7 @@ def fold_cross_validation (data_input, data_target) :
         data_target_train.append(data_target.loc[train_idx])
         
         # Display fold information (optional)
-        print(f"Fold {i + 1}: Train {len(train_idx)}, Test {len(test_idx)}\n")
+        #print(f"Fold {i + 1}: Train {len(train_idx)}, Test {len(test_idx)}\n")
         
     all_train_input = pd.concat([data_input_train[0], data_input_train[1], data_input_train[2], data_input_train[3], data_input_train[4]])
     all_train_target = pd.concat([data_target_train[0], data_target_train[1], data_target_train[2], data_target_train[3], data_target_train[4]])
