@@ -13,7 +13,7 @@ def support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, n_es
     if reg_or_class == 'Regression' :
         
         # Develop the model
-        svm = SVC(kernel=n)
+        svm = SVR(kernel=n)
         
         # Train model
         svm.fit(x_train, y_train)
