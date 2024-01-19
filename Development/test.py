@@ -51,7 +51,7 @@ selection_user_prompt = st.sidebar.selectbox("Input Your Own Data", options = ["
 
 # --------------------------------------------------- METHOD OF ALGORITHM SELECTION ---------------------------------------------------
 def RandomForest(user_input_array):
-    if np.any(user_input_array):
+    if user_input_array.size > 0:
         test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, np.array(user_input_array).reshape(1, -1))
         st.subheader("Based On User Input [N_Estimation = 1]")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
@@ -59,7 +59,7 @@ def RandomForest(user_input_array):
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
+        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array.reshape(1, -1))
         st.subheader("N_Estimation = 1")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
         print("test result (n_estimate=1 ): ", test_result, "(", test_result_type, ")")
@@ -77,7 +77,7 @@ def RandomForest(user_input_array):
         print("test result (n_estimate=15): ", test_result, "(", test_result_type, ")")
 
 def KNearestNeighbors(user_input_array):
-    if np.any(user_input_array):
+    if user_input_array.size > 0:
         test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, np.array(user_input_array).reshape(1, -1))
         st.subheader("Based On User Input [N_Neighbor = 100]")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
@@ -103,7 +103,7 @@ def KNearestNeighbors(user_input_array):
         print("test result (n_neighbor = 400): ", test_result, "(", test_result_type, ")")
 
 def SupportVectorMachine(user_input_array):
-    if np.any(user_input_array):
+    if user_input_array.size > 0:
         test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', np.array(user_input_array).reshape(1, -1))
         st.subheader("Based On User Input [Kernel = RBF]")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
