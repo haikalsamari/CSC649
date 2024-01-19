@@ -7,6 +7,8 @@ from sklearn.metrics import mean_squared_error
 
 def k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, n_estimator, user_input_array):
     
+    test_result = 0
+    test_result_type = ""
     n = n_estimator
     
     # Identfication Whether The Dataset is Regressor or Class
