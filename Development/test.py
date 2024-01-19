@@ -59,6 +59,22 @@ def RandomForest(user_input_array):
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
+        estimation_options = [1, 5, 10, 15]
+
+        for estimation in estimation_options:
+            test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
+
+            st.subheader(f"Kernel {estimation}")
+            
+            # Create a list of lists to represent the table data
+            table_data = [
+                ["Test Result", test_result],
+                ["Test Result Type", test_result_type]
+            ]
+
+            # Display the table
+            st.table(table_data)
+        '''
         test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array.reshape(1, -1))
         st.subheader("N_Estimation = 1")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
@@ -75,6 +91,7 @@ def RandomForest(user_input_array):
         st.subheader("N_Estimation = 15")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
         print("test result (n_estimate=15): ", test_result, "(", test_result_type, ")")
+        '''
 
 def KNearestNeighbors(user_input_array):
     if user_input_array.size > 0:
@@ -85,6 +102,23 @@ def KNearestNeighbors(user_input_array):
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
+        neighbor_options = [100, 200, 300, 400]
+
+        for neighbor in neighbor_options:
+            test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+
+            st.subheader(f"Kernel {neighbor}")
+            
+            # Create a list of lists to represent the table data
+            table_data = [
+                ["Test Result", test_result],
+                ["Test Result Type", test_result_type]
+            ]
+
+            # Display the table
+            st.table(table_data)
+        
+        '''
         test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
         st.subheader("N_Neighbor = 100")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
@@ -101,6 +135,7 @@ def KNearestNeighbors(user_input_array):
         st.subheader("N_Neighbor = 400")
         st.write(f"Test Result: {test_result} [{test_result_type}]")
         print("test result (n_neighbor = 400): ", test_result, "(", test_result_type, ")")
+        '''
 
 def SupportVectorMachine(user_input_array):
     if user_input_array.size > 0:
@@ -111,22 +146,38 @@ def SupportVectorMachine(user_input_array):
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        st.subheader("Kernel Linear")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (linear): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
-        st.subheader("Kernel RBF")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (rbf): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'sigmoid', user_input_array)
-        st.subheader("Kernel Sigmoid")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (sigmoid): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'poly', user_input_array)
-        st.subheader("Kernel Poly")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (  poly ): ", test_result, "(", test_result_type, ")")
+        kernel_options = ['linear', 'rbf', 'sigmoid', 'poly']
+
+        for kernel in kernel_options:
+            test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
+
+            st.subheader(f"Kernel {kernel.capitalize()}")
+            
+            # Create a list of lists to represent the table data
+            table_data = [
+                ["Test Result", test_result],
+                ["Test Result Type", test_result_type]
+            ]
+
+            # Display the table
+            st.table(table_data)
+        
+        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
+        #st.subheader("Kernel Linear")
+        #st.write(f"Test Result: {test_result} [{test_result_type}]")
+        #print("test result (linear): ", test_result, "(", test_result_type, ")")
+        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
+        #st.subheader("Kernel RBF")
+        #st.write(f"Test Result: {test_result} [{test_result_type}]")
+        #print("test result (rbf): ", test_result, "(", test_result_type, ")")
+        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'sigmoid', user_input_array)
+        #st.subheader("Kernel Sigmoid")
+        #st.write(f"Test Result: {test_result} [{test_result_type}]")
+        #print("test result (sigmoid): ", test_result, "(", test_result_type, ")")
+        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'poly', user_input_array)
+        #st.subheader("Kernel Poly")
+        #st.write(f"Test Result: {test_result} [{test_result_type}]")
+        #print("test result (  poly ): ", test_result, "(", test_result_type, ")")
 
 
 # --------------------------------------------------- DATASET SELECTION ---------------------------------------------------
@@ -365,13 +416,13 @@ elif selection_dataset == 'Absenteeism':
         # Multi-Selection of Algorithms
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Absenteeism Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Absenteeism Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Absenteeism Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
@@ -380,13 +431,13 @@ elif selection_dataset == 'Absenteeism':
 
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Absenteeism Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Absenteeism Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Absenteeism Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
@@ -490,13 +541,13 @@ elif selection_dataset == 'Satisfaction':
         # Multi-Selection of Algorithms
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Satisfaction Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Satisfaction Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Satisfaction Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
@@ -505,13 +556,13 @@ elif selection_dataset == 'Satisfaction':
 
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Satisfaction Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Satisfaction Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Satisfaction Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
@@ -670,13 +721,13 @@ elif selection_dataset == 'Turnover':
         # Multi-Selection of Algorithms
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Turnover Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Turnover Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Turnover Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
@@ -685,13 +736,13 @@ elif selection_dataset == 'Turnover':
 
         for algorithm in selection_algorithm:
             if algorithm == "Random Forest":
-                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                st.header("Test Result of Random Forest for Employee Turnover Dataset")
                 RandomForest(user_input_array)
             elif algorithm == "KNN":
-                st.header("Test Result of KNN for Employee Burnout Dataset")
+                st.header("Test Result of KNN for Employee Turnover Dataset")
                 KNearestNeighbors(user_input_array)
             elif algorithm == "SVM":
-                st.header("Test Result of SVM for Employee Burnout Dataset")
+                st.header("Test Result of SVM for Employee Turnover Dataset")
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
