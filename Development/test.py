@@ -279,6 +279,10 @@ elif selection_dataset == 'Satisfaction':
     st.write("This dataset contains full dataset of employee satisfaction.")
     data
 
+    # Dummies
+    categorical_columns = ['Gender', 'Department', 'Position']
+    data = pd.get_dummies(data, columns=categorical_columns)
+
     # Data Splitting
     data_input = data.drop(columns=['Name', 'Feedback Score', 'Joining Date', 'Satisfaction Rate (%)'])
     data_target = data['Satisfaction Rate (%)']
