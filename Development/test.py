@@ -1,4 +1,6 @@
 # Selection Statement On Dataset
+from operator import ge
+import random
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -44,11 +46,16 @@ selection_dataset = st.sidebar.selectbox("Select Dataset", options = ["Select Da
 # Checkbox for Algorithm Selection
 selection_algorithm = st.sidebar.multiselect("Select Algorithm", ["Random Forest", "KNN", "SVM"])
 
+# Dropdown List for User Prompt
+selection_user_prompt = st.sidebar.selectbox("Input Your Own Data", options = ["Input Own Data", "Yes", "No"])
 
 # --------------------------------------------------- METHOD OF ALGORITHM SELECTION ---------------------------------------------------
 def RandomForest(user_input_array):
     if np.any(user_input_array):
-        test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
+        test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, np.array(user_input_array).reshape(1, -1))
+        st.subheader("Based On User Input [N_Estimation = 1]")
+        st.write(f"Test Result: {test_result} [{test_result_type}]")
+        st.write(f"User Prediction: {user_pred}")
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
@@ -71,8 +78,11 @@ def RandomForest(user_input_array):
 
 def KNearestNeighbors(user_input_array):
     if np.any(user_input_array):
-        test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
-        print("test result : ", test_result, "(", test_result_type, ")")
+        test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, np.array(user_input_array).reshape(1, -1))
+        st.subheader("Based On User Input [N_Neighbor = 100]")
+        st.write(f"Test Result: {test_result} [{test_result_type}]")
+        st.write(f"User Prediction: {user_pred}")
+        print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
         test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
@@ -94,8 +104,11 @@ def KNearestNeighbors(user_input_array):
 
 def SupportVectorMachine(user_input_array):
     if np.any(user_input_array):
-        test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
-        print("test result : ", test_result, "(", test_result_type, ")")
+        test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', np.array(user_input_array).reshape(1, -1))
+        st.subheader("Based On User Input [Kernel = RBF]")
+        st.write(f"Test Result: {test_result} [{test_result_type}]")
+        st.write(f"User Prediction: {user_pred}")
+        print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
         test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
@@ -163,7 +176,7 @@ if selection_dataset == 'Burnout':
 
     # Display Corresponding Training Data
     st.subheader("Input Training Data")
-    st.write("As provided below, this dataset is specifically used for the input of training data.")
+    st.write("As provided below, this dataset is specifically used for the input of training data. Additionally, all unnecessary columns are dropped.")
     x_train
     st.subheader("Target Training Data")
     st.write("In the meanwhile, this dataset is specifically used for the target of training data.")
@@ -179,22 +192,57 @@ if selection_dataset == 'Burnout':
 
     # Dataset Type
     reg_or_class = 'Regression'
-    user_input_array = np.array([])
 
+    if selection_user_prompt == "Yes":
+        designation = st.sidebar.slider("Select Designation", min_value=0, max_value=10, value=0)
+        resource = st.sidebar.slider("Select Resource Allocation", min_value=0, max_value=10, value=0)
+        gender = st.sidebar.selectbox("Select Gender", options = ["Select Gender", 'Male', 'Female'])
+        companyType = st.sidebar.selectbox("Select Company Type", options = ["Select Type", 'Product', 'Service'])
+        wfh = st.sidebar.selectbox("Select WFH Setup Available", options = ["Select Availability", 'Yes', 'No'])
 
+        # Map categorical variables to numeric representations
+        gender_female = 1 if gender == 'Female' else 0
+        gender_male = 1 if gender == 'Male' else 0
+        companyType_service = 1 if companyType == 'Service' else 0
+        companyType_product = 1 if companyType == 'Product' else 0
+        wfh_yes = 1 if wfh == 'Yes' else 0
+        wfh_no = 1 if wfh == 'No' else 0
 
-    # Multi-Selection of Algorithms
-    if "Random Forest" in selection_algorithm:
-        st.header("Test Result of Random Forest for Employee Burnout Dataset")
-        RandomForest(user_input_array)
-    if "KNN" in selection_algorithm:
-        st.header("Test Result of KNN for Employee Burnout Dataset")
-        KNearestNeighbors(user_input_array)
-    if "SVM" in selection_algorithm:
-        st.header("Test Result of SVM for Employee Burnout Dataset")
-        SupportVectorMachine(user_input_array)
-    if not selection_algorithm:
-        print("Please Select At Least One Algorithm")
+        # User Prompt
+        user_input_array = np.array([
+            designation, resource, gender_female, gender_male, companyType_product, companyType_service, wfh_no, wfh_yes
+        ], dtype=object)
+
+        # Multi-Selection of Algorithms
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    elif selection_user_prompt == "No":
+        user_input_array = np.array([])
+
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    else:
+        print("None")
 
 # Absenteeism
 elif selection_dataset == 'Absenteeism':
@@ -214,7 +262,7 @@ elif selection_dataset == 'Absenteeism':
     data
     
     # Data Splitting
-    data_input = data.drop(columns=['Work load Average/day ', 'Hit target', 'Absenteeism time in hours'])
+    data_input = data.drop(columns=['Reason for absence', 'Seasons', 'Work load Average/day ', 'Hit target', 'Absenteeism time in hours'])
     data_target = data['Absenteeism time in hours']
     x_train, y_train, x_test, y_test = fold_cross_validation (data_input, data_target)
     
@@ -245,21 +293,105 @@ elif selection_dataset == 'Absenteeism':
     # Dataset Type
     reg_or_class = 'Regression'
     
-    # user_input_array = np.array([[11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30], [11, 26, 7, 3, 1, 289, 36, 13, 33, 0, 1, 2, 1, 0, 1, 90, 172, 30]])
-    user_input_array = np.array([])
+    if selection_user_prompt == "Yes":
+        id = st.sidebar.text_input("Insert ID")
+        month_absence = st.sidebar.slider("Select Month of Absence", min_value=0, max_value=12, value=0)
+        day_of_week = st.sidebar.selectbox("Select Day of Week", options = ["Select Day", 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
+        transportation_expense = st.sidebar.slider("Select Transportation Expenses", min_value=0, max_value=500, value=0)  
+        distance = st.sidebar.slider("Select Distance From Residence to Work", min_value=0, max_value=100, value=0)  
+        service_time = st.sidebar.slider("Select Service Time", min_value=0, max_value=20, value=0) 
+        age = st.sidebar.slider("Select Age", min_value=0, max_value=60, value=0)  
+        disciplinary_failure = st.sidebar.selectbox("Select Disciplinary Failure", options = ["Select Type of Disciplinary Failure", 'Yes', 'No']) 
+        education = st.sidebar.selectbox("Select Education", options = ["Select Education", 'High School', 'Graduate', 'Postgraduate', 'Doctor']) 
+        son = st.sidebar.slider("Select Number of Children", min_value=0, max_value=10, value=0)  
+        drinker = st.sidebar.selectbox("Select Type of Social Drinker", options = ["Select Type of Social Drinker", 'Yes', 'No']) 
+        smoker = st.sidebar.selectbox("Select Type of Social Smoker", options = ["Select Type of Social Smoker", 'Yes', 'No']) 
+        pet = st.sidebar.slider("Select Number of Pet", min_value=0, max_value=10, value=0)  
+        weight = st.sidebar.text_input("Insert weight")
+        height = st.sidebar.text_input("Insert height (cm)")
+        
+        try:
+            id = float(id)
+            weight = float(weight)
+            height = float(height)
+            height = height/100
+            # Check for non-zero height to avoid division by zero
+            if height != 0:
+                bmi = weight / (height * height)
+            else:
+                st.sidebar.warning("Height should be non-zero for BMI calculation.")
+                bmi = None
+        except ValueError:
+            st.sidebar.warning("Please enter valid numerical values for weight and height.")
+            bmi = None
 
-    # Multi-Selection of Algorithms
-    if "Random Forest" in selection_algorithm:
-        st.header("Test Result of Random Forest for Employee Absenteeism At Work Dataset")
-        RandomForest(user_input_array)
-    if "KNN" in selection_algorithm:
-        st.header("Test Result of KNN for Employee Absenteeism At Work Dataset")
-        KNearestNeighbors(user_input_array)
-    if "SVM" in selection_algorithm:
-        st.header("Test Result of SVM for Employee Absenteeism At Work Dataset")
-        SupportVectorMachine(user_input_array)
-    if not selection_algorithm:
-        print("Please Select At Least One Algorithm")
+        # Display BMI
+        display_bmi = st.sidebar.text_input("BMI", bmi)
+
+        # Map categorical variables to numeric representations
+        day_week = 2 if day_of_week == 'Monday' else 0
+        day_week = 3 if day_of_week == 'Tuesday' else 0
+        day_week = 4 if day_of_week == 'Wednesday' else 0
+        day_week = 5 if day_of_week == 'Thursday' else 0
+        day_week = 6 if day_of_week == 'Friday' else 0
+
+        discipline = 1 if disciplinary_failure == 'Yes' else 0
+        discipline = 0 if disciplinary_failure == 'No' else 1
+
+        education_level = 1 if education == 'High School' else 0
+        education_level = 2 if education == 'Graduate' else 0
+        education_level = 3 if education == 'Postgraduate' else 0
+        education_level = 4 if education == 'Doctor' else 0
+
+        social_drinker = 1 if drinker == 'Yes' else 0
+        social_drinker = 0 if drinker == 'No' else 1
+
+        social_smoker = 1 if smoker == 'Yes' else 0
+        social_smoker = 0 if smoker == 'No' else 1
+
+        # User Prompt
+        user_input_array = np.array([
+            id, month_absence, day_of_week, transportation_expense, distance, 
+            service_time, age, disciplinary_failure, education, son, drinker, 
+            smoker, pet, weight, height, display_bmi
+        ], dtype=object)
+
+        # Ensure that numerical values are used for the model
+        user_input_array = np.array([float(val) if isinstance(val, (int, float)) else 0.0 for val in user_input_array])
+
+        # Reshape to (1, -1)
+        user_input_array = np.reshape(user_input_array, (1, -1))
+
+        # Multi-Selection of Algorithms
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    elif selection_user_prompt == "No":
+        user_input_array = np.array([])
+
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    else:
+        print("None")
 
 # Satisfaction
 elif selection_dataset == 'Satisfaction':
@@ -290,45 +422,101 @@ elif selection_dataset == 'Satisfaction':
 
     # Display Both Input and Target Data
     st.subheader("Input Data of Employee Satisfaction")
-    st.write("It contains input data of employee absenteeism at work.")
+    st.write("It contains input data of employee satisfaction at work.")
     data_input
 
     st.subheader("Target Data of Employee Satisfaction")
-    st.write("In addition, the target data of employee absenteeism at work is included as well.")
+    st.write("In addition, the target data of employee satisfaction is included as well.")
     data_target
     
     # Display Corresponding Training Data
     st.subheader("Input Training Data of Employee Satisfaction")
-    st.write("Input training data of employee absenteeism at work is provided below.")
+    st.write("Input training data of employee satisfaction is provided below.")
     x_train
     st.subheader("Target Training Data of Employee Satisfaction")
-    st.write("Furthermore, target training data of employee absenteeism at work is provided as well.")
+    st.write("Furthermore, target training data of employee satisfaction is provided as well.")
     y_train
 
     # Display Corresponding Testing Data
     st.subheader("Input Testing Data of Employee Satisfaction")
-    st.write("Input testing data of employee absenteeism at work is provided below.")
+    st.write("Input testing data of employee satisfaction is provided below.")
     x_test
     st.subheader("Target Testing Data of Employee Satisfaction")
-    st.write("Furthermore, target testing data of employee absenteeism at work is provided as well.")
+    st.write("Furthermore, target testing data of employee satisfaction is provided as well.")
     y_test
 
     # Dataset Type
     reg_or_class = 'Regression'
-    user_input_array = np.array([])
 
-    # Multi-Selection of Algorithms
-    if "Random Forest" in selection_algorithm:
-        st.header("Test Result of Random Forest for Employee Satisfaction Dataset")
-        RandomForest(user_input_array)
-    if "KNN" in selection_algorithm:
-        st.header("Test Result of KNN for Employee Satisfaction Dataset")
-        KNearestNeighbors(user_input_array)
-    if "SVM" in selection_algorithm:
-        st.header("Test Result of SVM for Employee Satisfaction Dataset")
-        SupportVectorMachine(user_input_array)
-    if not selection_algorithm:
-        print("Please Select At Least One Algorithm")
+    if selection_user_prompt == "Yes":
+        age = st.sidebar.slider("Select Age", min_value=0, max_value=60, value=0)  
+        projects_completed = st.sidebar.slider("Select Projects Completed", min_value=0, max_value=30, value=0)  
+        productivity = st.sidebar.slider("Select Productivity", min_value=0, max_value=100, value=0) 
+        salary = st.sidebar.text_input("Insert Salary")
+        gender = st.sidebar.selectbox("Select Gender", options = ["Select Gender", 'Male', 'Female'])
+        department = st.sidebar.selectbox("Select Department", options = ["Select Department", 'Finance', 'HR', 'IT', 'Marketing', 'Sales'])
+        position = st.sidebar.selectbox("Select Position", options = ["Select Position", 'Analyst', 'Intern', 'Junior Developer', 'Manager', 'Senior Developer', 'Team Lead'])
+
+        # Map categorical variables to numeric representations
+        gender_female = 1 if gender == 'Female' else 0
+        gender_male = 1 if gender == 'Male' else 0
+
+        department_finance = 1 if department == "Finance" else 0
+        department_hr = 1 if department == "HR" else 0
+        department_it = 1 if department == "IT" else 0
+        department_marketing = 1 if department == "Marketing" else 0
+        department_sales = 1 if department == "Sales" else 0
+
+        position_analyst = 1 if position == "Analyst" else 0
+        position_intern = 1 if position == "Intern" else 0
+        position_junior = 1 if position == "Junior Developer" else 0
+        position_manager = 1 if position == "Manager" else 0
+        position_senior = 1 if position == "Senior Developer" else 0
+        position_lead = 1 if position == "Team Lead" else 0
+
+        # User Prompt
+        user_input_array = np.array([
+            age, projects_completed, productivity, salary, gender_female, gender_male, 
+            department_finance, department_hr, department_it, department_marketing, department_sales,
+            position_analyst, position_intern, position_junior, position_manager, position_senior, position_lead
+        ], dtype=object)
+
+        # Ensure that numerical values are used for the model
+        user_input_array = np.array([float(val) if isinstance(val, (int, float)) else 0.0 for val in user_input_array])
+
+        # Reshape to (1, -1)
+        user_input_array = np.reshape(user_input_array, (1, -1))
+
+        # Multi-Selection of Algorithms
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    elif selection_user_prompt == "No":
+        user_input_array = np.array([])
+
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    else:
+        print("None")
 
 # Turnover
 elif selection_dataset == 'Turnover':
@@ -381,20 +569,134 @@ elif selection_dataset == 'Turnover':
     
     # Dataset Type
     reg_or_class = 'Classification'
-    user_input_array = np.array([])
+    
+    if selection_user_prompt == "Yes":
+        stag = st.sidebar.slider("Rate Experience", min_value=0.0, max_value=50.0, value=0.0, step=0.01)  
+        age = st.sidebar.slider("Select Age", min_value=0, max_value=60, value=0)  
+        extraversion = st.sidebar.slider("Rate Extraversion", min_value=0.0, max_value=10.0, value=0.0, step=0.1)  
+        independ = st.sidebar.slider("Rate Independ", min_value=0.0, max_value=10.0, value=0.0, step=0.1)  
+        selfcontrol = st.sidebar.slider("Rate Self Control", min_value=0.0, max_value=10.0, value=0.0, step=0.1)  
+        anxiety = st.sidebar.slider("Rate Anxiety", min_value=0.0, max_value=10.0, value=0.0, step=0.1)  
+        gender = st.sidebar.selectbox("Select Gender", options = ["Select Gender", 'Male', 'Female'])
 
-    # Multi-Selection of Algorithms
-    if "Random Forest" in selection_algorithm:
-        st.header("Test Result of Random Forest for Employee Turnover Dataset")
-        RandomForest(user_input_array)
-    if "KNN" in selection_algorithm:
-        st.header("Test Result of KNN for Employee Turnover Dataset")
-        KNearestNeighbors(user_input_array)
-    if "SVM" in selection_algorithm:
-        st.header("Test Result of SVM for Employee Turnover Dataset")
-        SupportVectorMachine(user_input_array)
-    if not selection_algorithm:
-        print("Please Select At Least One Algorithm")
+        industry = st.sidebar.selectbox("Select Industry", options = ["Select Industry", 'HoReCa', 'Agriculture', 'Bank', 'Building', 'Consult', 'IT', 'Mining', 'Pharma', 
+                                                                      'Power Generation', 'Real Estate', 'Retail', 'State', 'Telecom', 'etc', 'Manufacture', 'Transport'])
+        profession = st.sidebar.selectbox("Select Profession", options = ["Select Profession", 'Accounting', 'Business Development', 'Commercial', 'Consult', 'Engineer', 'Finance',
+                                                                          'HR', 'IT', 'Law', 'Marketing', 'PR', 'Sales', 'Teaching', 'etc', 'Manage'])
+        traffic = st.sidebar.selectbox("Select Traffic", options = ["Select Traffic", 'KA', 'Advert', 'empjs', 'Friends', 'rabrecNErab', 'recNErab', 'Referal', 'Youjs'])
+        coach = st.sidebar.selectbox("Select Coach", options = ["Select Coach", 'My Head', 'No', 'Yes'])
+        head_gender = st.sidebar.selectbox("Select Head Gender", options = ["Select Head Gender", 'Female', 'Male'])
+        greywage = st.sidebar.selectbox("Select Greywage", options = ["Select Greywage", 'Grey', 'White'])
+        way = st.sidebar.selectbox("Select Way", options = ["Select Way", 'Bus', 'Car', 'Foot'])
+
+
+        # Map categorical variables to numeric representations
+        gender_female = 1 if gender == 'Female' else 0
+        gender_male = 1 if gender == 'Male' else 0
+
+        industry_horeca = 1 if industry == "HoReCa" else 0
+        industry_agriculture = 1 if industry == "Agriculture" else 0
+        industry_bank = 1 if industry == "Bank" else 0
+        industry_buidling = 1 if industry == "Building" else 0
+        industry_consult = 1 if industry == "Consult" else 0
+        industry_it = 1 if industry == "IT" else 0
+        industry_mining = 1 if industry == "Mining" else 0
+        industry_pharma = 1 if industry == "Pharma" else 0
+        industry_power = 1 if industry == "Power Generation" else 0
+        industry_estate = 1 if industry == "Real Estate" else 0
+        industry_retail = 1 if industry == "Retail" else 0
+        industry_state = 1 if industry == "State" else 0
+        industry_telecom = 1 if industry == "Telecom" else 0
+        industry_etc = 1 if industry == "etc" else 0
+        industry_manufacture = 1 if industry == "Manufacture" else 0
+        industry_transport = 1 if industry == "Transport" else 0
+
+        profession_accounting = 1 if profession == "Accounting" else 0
+        profession_business = 1 if profession == "Business Development" else 0
+        profession_commercial = 1 if profession == "Commercial" else 0
+        profession_consult= 1 if profession == "Consult" else 0
+        profession_engineer = 1 if profession == "Engineer" else 0
+        profession_finance = 1 if profession == "Finance" else 0
+        profession_hr = 1 if profession == "HR" else 0
+        profession_it= 1 if profession == "IT" else 0
+        profession_law = 1 if profession == "Law" else 0
+        profession_marketing = 1 if profession == "Marketing" else 0
+        profession_pr = 1 if profession == "PR" else 0
+        profession_sales = 1 if profession == "Sales" else 0
+        profession_teaching = 1 if profession == "Teaching" else 0
+        profession_etc = 1 if profession == "etc" else 0
+        profession_manage = 1 if profession == "Manage" else 0
+
+        traffic_ka = 1 if traffic == "KA" else 0
+        traffic_advert = 1 if traffic == "Advert" else 0
+        traffic_empjs = 1 if traffic == "empjs" else 0
+        traffic_friends = 1 if traffic == "Friends" else 0
+        traffic_rab = 1 if traffic == "rabrecNErab" else 0
+        traffic_rec = 1 if traffic == "recNErab" else 0
+        traffic_ref = 1 if traffic == "Referal" else 0
+        traffic_youjs = 1 if traffic == "Youjs" else 0
+
+        coach_head = 1 if coach == "My Head" else 0
+        coach_no = 1 if coach == "No" else 0
+        coach_yes = 1 if coach == "Yes" else 0
+
+        head_female = 1 if head_gender == "Female" else 0
+        head_male = 1 if head_gender == "Male" else 0
+
+        greywage_grey = 1 if greywage == "Grey" else 0
+        greywage_white = 1 if greywage == "White" else 0
+
+        way_bus = 1 if way == "Bus" else 0
+        way_car = 1 if way == "Car" else 0
+        way_foot = 1 if way == "Foot" else 0
+
+        # User Prompt
+        user_input_array = np.array([
+            stag, age, extraversion, independ, selfcontrol, anxiety, gender_female, gender_male, industry_horeca, industry_agriculture, industry_bank, 
+            industry_buidling, industry_consult, industry_it, industry_mining, industry_pharma, industry_power, industry_estate, industry_retail, industry_state, industry_telecom, industry_etc,
+            industry_manufacture, industry_transport, profession_accounting, profession_business, profession_commercial, profession_consult, profession_engineer,
+            profession_finance, profession_hr, profession_it, profession_law, profession_marketing, profession_pr, profession_sales, profession_teaching, profession_etc, profession_manage,
+            traffic_ka, traffic_advert, traffic_empjs, traffic_friends, traffic_rab, traffic_rec, traffic_ref, traffic_youjs, coach_head, coach_no, coach_yes, head_female,
+            head_male, greywage_grey, greywage_white, way_bus, way_car, way_foot
+        ], dtype=object)
+
+        
+        # Ensure that numerical values are used for the model
+        user_input_array = np.array([float(val) if isinstance(val, (int, float)) else 0.0 for val in user_input_array])
+
+        # Reshape to (1, -1)
+        user_input_array = np.reshape(user_input_array, (1, -1))
+
+        # Multi-Selection of Algorithms
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    elif selection_user_prompt == "No":
+        user_input_array = np.array([])
+
+        for algorithm in selection_algorithm:
+            if algorithm == "Random Forest":
+                st.header("Test Result of Random Forest for Employee Burnout Dataset")
+                RandomForest(user_input_array)
+            elif algorithm == "KNN":
+                st.header("Test Result of KNN for Employee Burnout Dataset")
+                KNearestNeighbors(user_input_array)
+            elif algorithm == "SVM":
+                st.header("Test Result of SVM for Employee Burnout Dataset")
+                SupportVectorMachine(user_input_array)
+            else:
+                st.warning("Please Select One Algorithm")
+    else:
+        print("None")
 
 # Alternative    
 else:
