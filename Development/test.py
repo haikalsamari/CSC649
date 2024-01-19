@@ -181,7 +181,7 @@ if selection_dataset == 'Burnout':
     reg_or_class = 'Regression'
     user_input_array = np.array([])
 
-    
+
 
     # Multi-Selection of Algorithms
     if "Random Forest" in selection_algorithm:
@@ -395,58 +395,3 @@ elif selection_dataset == 'Turnover':
 # Alternative    
 else:
     print("Please Select One Dataset")
-
-# ALGORITHM SELECTION -------------------------------------------------------------------------------------------------------------------------
-    
-selection_algorithm = 'KNN'
-
-if selection_algorithm == 'Random Forest' :
-
-    if np.any(user_input_array):
-        test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
-        print("test result (n=1): ", test_result, "(", test_result_type, ")")
-        print("user_pred : ", user_pred)
-    else:
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array)
-        print("test result (n_estimate=1 ): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 5, user_input_array)
-        print("test result (n_estimate=5 ): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 10, user_input_array)
-        print("test result (n_estimate=10): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 15, user_input_array)
-        print("test result (n_estimate=15): ", test_result, "(", test_result_type, ")")
-    
-elif selection_algorithm == 'KNN' :
-
-    if np.any(user_input_array):
-        test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
-        print("test result : ", test_result, "(", test_result_type, ")")
-        print("user_pred : ", user_pred)
-    else:
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
-        print("test result (n_neighbor=100): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 200, user_input_array)
-        print("test result (n_neighbor=200): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 300, user_input_array)
-        print("test result (n_neighbor=300): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 400, user_input_array)
-        print("test result (n_neighbor=400): ", test_result, "(", test_result_type, ")")
-
-elif selection_algorithm == 'SVM' :
-
-    if np.any(user_input_array):
-        test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
-        print("test result : ", test_result, "(", test_result_type, ")")
-        print("user_pred : ", user_pred)
-    else:
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        print("test result (linear): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        print("test result (rbf): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        print("test result (sigmoid): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        print("test result (  poly ): ", test_result, "(", test_result_type, ")")
-
-else :
-    print('None')
