@@ -53,9 +53,19 @@ selection_user_prompt = st.sidebar.selectbox("Input Your Own Data", options = ["
 def RandomForest(user_input_array):
     if user_input_array.size > 0:
         test_result_type, test_result, user_pred = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, np.array(user_input_array).reshape(1, -1))
-        st.subheader("Based On User Input [N_Estimation = 1]")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        st.write(f"User Prediction: {user_pred}")
+        st.subheader("Based On User Input for N_Estimation [1]")
+        
+        table_data = [
+            ["1", test_result_type.upper(), test_result, user_pred],
+        ]
+
+        df = pd.DataFrame(table_data, columns=["N_Estimation", "Type", "Value", "User Prediction"])
+        df = df.reset_index(drop=True)
+        df.index += 1
+
+        # Display the table
+        st.table(df)
+
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
@@ -64,85 +74,74 @@ def RandomForest(user_input_array):
         for estimation in estimation_options:
             test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
 
-            st.subheader(f"Kernel {estimation}")
+            st.subheader(f"N_Estimation = {estimation}")
             
             # Create a list of lists to represent the table data
             table_data = [
-                ["Test Result", test_result],
-                ["Test Result Type", test_result_type]
+                [estimation, test_result_type.upper(), test_result],
             ]
 
+            df = pd.DataFrame(table_data, columns=["N_Estimation", "Type", "Value"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
             # Display the table
-            st.table(table_data)
-        '''
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 1, user_input_array.reshape(1, -1))
-        st.subheader("N_Estimation = 1")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_estimate=1 ): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 5, user_input_array)
-        st.subheader("N_Estimation = 5")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_estimate=5 ): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 10, user_input_array)
-        st.subheader("N_Estimation = 10")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_estimate=10): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = random_forest (x_train, x_test, y_train, y_test, reg_or_class, 15, user_input_array)
-        st.subheader("N_Estimation = 15")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_estimate=15): ", test_result, "(", test_result_type, ")")
-        '''
+            st.table(df)
 
 def KNearestNeighbors(user_input_array):
     if user_input_array.size > 0:
         test_result_type, test_result, user_pred = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, np.array(user_input_array).reshape(1, -1))
-        st.subheader("Based On User Input [N_Neighbor = 100]")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        st.write(f"User Prediction: {user_pred}")
+        st.subheader("Based On User Input for N_Neighbor [100]")
+        
+        table_data = [
+            ["100", test_result_type.upper(), test_result, user_pred],
+        ]
+
+        df = pd.DataFrame(table_data, columns=["N_Neighbor", "Type", "Value", "User Prediction"])
+        df = df.reset_index(drop=True)
+        df.index += 1
+
+        # Display the table
+        st.table(df)
+
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
         neighbor_options = [100, 200, 300, 400]
 
         for neighbor in neighbor_options:
-            test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+            test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
 
-            st.subheader(f"Kernel {neighbor}")
+            st.subheader(f"N_Neighbor [{neighbor}]")
             
             # Create a list of lists to represent the table data
             table_data = [
-                ["Test Result", test_result],
-                ["Test Result Type", test_result_type]
+                [neighbor, test_result_type.upper(), test_result],
             ]
 
+            df = pd.DataFrame(table_data, columns=["N_Neighbor", "Type", "Value"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
             # Display the table
-            st.table(table_data)
-        
-        '''
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 100, user_input_array)
-        st.subheader("N_Neighbor = 100")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_neighbor = 100): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 200, user_input_array)
-        st.subheader("N_Neighbor = 200")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_neighbor = 200): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 300, user_input_array)
-        st.subheader("N_Neighbor = 300")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_neighbor = 300): ", test_result, "(", test_result_type, ")")
-        test_result_type, test_result = k_near_neighbor (x_train, x_test, y_train, y_test, reg_or_class, 400, user_input_array)
-        st.subheader("N_Neighbor = 400")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        print("test result (n_neighbor = 400): ", test_result, "(", test_result_type, ")")
-        '''
+            st.table(df)
 
 def SupportVectorMachine(user_input_array):
     if user_input_array.size > 0:
         test_result_type, test_result, user_pred = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', np.array(user_input_array).reshape(1, -1))
-        st.subheader("Based On User Input [Kernel = RBF]")
-        st.write(f"Test Result: {test_result} [{test_result_type}]")
-        st.write(f"User Prediction: {user_pred}")
+        st.subheader("Based On User Input for Kernel [RBF]")
+
+        table_data = [
+            ["RBF Kernel", test_result_type.upper(), test_result, user_pred],
+        ]
+
+        df = pd.DataFrame(table_data, columns=["Type of Kernel", "Type", "Value", "User Prediction"])
+        df = df.reset_index(drop=True)
+        df.index += 1
+
+        # Display the table
+        st.table(df)
+
         print("test result (n=1): ", test_result, "(", test_result_type, ")")
         print("user_pred : ", user_pred)
     else:
@@ -151,34 +150,18 @@ def SupportVectorMachine(user_input_array):
         for kernel in kernel_options:
             test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
 
-            st.subheader(f"Kernel {kernel.capitalize()}")
+            st.subheader(f"{kernel.capitalize()} Kernel")
             
-            # Create a list of lists to represent the table data
             table_data = [
-                ["Test Result", test_result],
-                ["Test Result Type", test_result_type]
+                [kernel.capitalize(), test_result_type.upper(), test_result],
             ]
 
-            # Display the table
-            st.table(table_data)
-        
-        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'linear', user_input_array)
-        #st.subheader("Kernel Linear")
-        #st.write(f"Test Result: {test_result} [{test_result_type}]")
-        #print("test result (linear): ", test_result, "(", test_result_type, ")")
-        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'rbf', user_input_array)
-        #st.subheader("Kernel RBF")
-        #st.write(f"Test Result: {test_result} [{test_result_type}]")
-        #print("test result (rbf): ", test_result, "(", test_result_type, ")")
-        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'sigmoid', user_input_array)
-        #st.subheader("Kernel Sigmoid")
-        #st.write(f"Test Result: {test_result} [{test_result_type}]")
-        #print("test result (sigmoid): ", test_result, "(", test_result_type, ")")
-        #test_result_type, test_result = support_vector_machine (x_train, x_test, y_train, y_test, reg_or_class, 'poly', user_input_array)
-        #st.subheader("Kernel Poly")
-        #st.write(f"Test Result: {test_result} [{test_result_type}]")
-        #print("test result (  poly ): ", test_result, "(", test_result_type, ")")
+            df = pd.DataFrame(table_data, columns=["Type of Kernel", "Type", "Value"])
+            df = df.reset_index(drop=True)
+            df.index += 1
 
+            # Display the table
+            st.table(df)
 
 # --------------------------------------------------- DATASET SELECTION ---------------------------------------------------
 # Burnout
@@ -292,6 +275,39 @@ if selection_dataset == 'Burnout':
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
+
+        # List of algorithms
+        algorithms = ["Random Forest", "KNN", "SVM"]
+        estimation_options = [1, 5, 10, 15]
+        neighbor_options = [100, 200, 300, 400]
+        kernel_options = ['linear', 'rbf', 'sigmoid', 'poly']
+
+        # Create a button
+        if st.sidebar.button("Show Test Results"):
+            table_data = []
+
+            st.subheader("All Test Results for Employee Burnout Dataset")
+
+            for algorithm in algorithms:
+
+                if algorithm == "Random Forest":
+                    for estimation in estimation_options:
+                        test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Estimation = {estimation}", test_result])
+                elif algorithm == "KNN":
+                    for neighbor in neighbor_options:
+                        test_result_type, test_result = k_near_neighbor(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Neighbor = {neighbor}", test_result])
+                elif algorithm == "SVM":
+                    for kernel in kernel_options:
+                        test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
+                        table_data.append([f"{algorithm}", f"Kernel = {kernel.capitalize()}", test_result])
+            
+            df = pd.DataFrame(table_data, columns=["Algorithm", "Type", "Accuracy/MSE"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
+            st.table(df)
     else:
         print("None")
 
@@ -441,6 +457,39 @@ elif selection_dataset == 'Absenteeism':
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
+
+        # List of algorithms
+        algorithms = ["Random Forest", "KNN", "SVM"]
+        estimation_options = [1, 5, 10, 15]
+        neighbor_options = [100, 200, 300, 400]
+        kernel_options = ['linear', 'rbf', 'sigmoid', 'poly']
+
+        # Create a button
+        if st.sidebar.button("Show Test Results"):
+            table_data = []
+
+            st.subheader("All Test Results for Employee Absenteeism Dataset")
+
+            for algorithm in algorithms:
+
+                if algorithm == "Random Forest":
+                    for estimation in estimation_options:
+                        test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Estimation = {estimation}", test_result])
+                elif algorithm == "KNN":
+                    for neighbor in neighbor_options:
+                        test_result_type, test_result = k_near_neighbor(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Neighbor = {neighbor}", test_result])
+                elif algorithm == "SVM":
+                    for kernel in kernel_options:
+                        test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
+                        table_data.append([f"{algorithm}", f"Kernel = {kernel.capitalize()}", test_result])
+            
+            df = pd.DataFrame(table_data, columns=["Algorithm", "Type", "Accuracy/MSE"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
+            st.table(df)
     else:
         print("None")
 
@@ -566,6 +615,39 @@ elif selection_dataset == 'Satisfaction':
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
+
+        # List of algorithms
+        algorithms = ["Random Forest", "KNN", "SVM"]
+        estimation_options = [1, 5, 10, 15]
+        neighbor_options = [100, 200, 300, 400]
+        kernel_options = ['linear', 'rbf', 'sigmoid', 'poly']
+
+        # Create a button
+        if st.sidebar.button("Show Test Results"):
+            table_data = []
+
+            st.subheader("All Test Results for Employee Satisfaction Dataset")
+
+            for algorithm in algorithms:
+
+                if algorithm == "Random Forest":
+                    for estimation in estimation_options:
+                        test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Estimation = {estimation}", test_result])
+                elif algorithm == "KNN":
+                    for neighbor in neighbor_options:
+                        test_result_type, test_result = k_near_neighbor(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Neighbor = {neighbor}", test_result])
+                elif algorithm == "SVM":
+                    for kernel in kernel_options:
+                        test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
+                        table_data.append([f"{algorithm}", f"Kernel = {kernel.capitalize()}", test_result])
+            
+            df = pd.DataFrame(table_data, columns=["Algorithm", "Type", "Accuracy/MSE"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
+            st.table(df)
     else:
         print("None")
 
@@ -746,6 +828,39 @@ elif selection_dataset == 'Turnover':
                 SupportVectorMachine(user_input_array)
             else:
                 st.warning("Please Select One Algorithm")
+
+        # List of algorithms
+        algorithms = ["Random Forest", "KNN", "SVM"]
+        estimation_options = [1, 5, 10, 15]
+        neighbor_options = [100, 200, 300, 400]
+        kernel_options = ['linear', 'rbf', 'sigmoid', 'poly']
+
+        # Create a button
+        if st.sidebar.button("Show Test Results"):
+            table_data = []
+
+            st.subheader("All Test Results for Employee Turnover Dataset")
+
+            for algorithm in algorithms:
+
+                if algorithm == "Random Forest":
+                    for estimation in estimation_options:
+                        test_result_type, test_result = random_forest(x_train, x_test, y_train, y_test, reg_or_class, estimation, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Estimation = {estimation}", test_result])
+                elif algorithm == "KNN":
+                    for neighbor in neighbor_options:
+                        test_result_type, test_result = k_near_neighbor(x_train, x_test, y_train, y_test, reg_or_class, neighbor, user_input_array)
+                        table_data.append([f"{algorithm}", f"N_Neighbor = {neighbor}", test_result])
+                elif algorithm == "SVM":
+                    for kernel in kernel_options:
+                        test_result_type, test_result = support_vector_machine(x_train, x_test, y_train, y_test, reg_or_class, kernel, user_input_array)
+                        table_data.append([f"{algorithm}", f"Kernel = {kernel.capitalize()}", test_result])
+            
+            df = pd.DataFrame(table_data, columns=["Algorithm", "Type", "Accuracy/MSE"])
+            df = df.reset_index(drop=True)
+            df.index += 1
+
+            st.table(df)
     else:
         print("None")
 
