@@ -1,5 +1,6 @@
 # Selection Statement On Dataset
 from operator import ge
+import os
 import random
 import pandas as pd
 import numpy as np
@@ -24,12 +25,20 @@ st.write("Workforce analytics is a vital tool in the IT sector which offering in
          "Meanwhile, machine learning is a subset of artificial intelligence that can enhances efficiency, automates repetitive tasks and provides accurate data analysis. "
          "Leveraging historical data patterns, machine learning aids in predicting employee turnover that can allow companies to address productivity challenges and optimize operations.")
 
+local_image_path = "../Development/image.png"
+width = 400 
+st.image(local_image_path, width=width)
+
 # Project Objectives
 st.header("Project Objectives")
 st.write("1. To identify machine learning techniques or algorithms that are suitable for predicting employees' behavior and productivity within IT companies.")
 st.write("2. To design and develop a prototype model that has the potential to predict employees' behavior and productivity within IT related companies.")
 st.write("3. To leverage multiple machine learning algorithms and techniques into a predicting model that can ease any workforce analytic task by the HR department within IT companies.")
 st.write("4. To test and evaluate the accuracy of the prototype model to predict employees' behavior and productivity within IT companies.")
+
+local_image_path = "../Development/image2.png"
+width = 500 
+st.image(local_image_path, width=width)
 
 # Project Scopes
 st.header("Project Scopes")
